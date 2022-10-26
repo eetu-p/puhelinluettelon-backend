@@ -24,8 +24,13 @@ const persons = [
   }
 ]
 
-app.get('/api/persons', (req, res) => {
-  res.send(persons)
+app.get('/api/persons', (req, res) => res.send(persons))
+
+app.get("/info", (req, res) => {
+  res.send(`
+    Phonebook has info for ${persons.length} people.
+    ${Date()}
+  `)
 })
 
 const PORT = 3001
