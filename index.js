@@ -26,6 +26,13 @@ const persons = [
 
 app.get('/api/persons', (req, res) => res.send(persons))
 
+app.get("/api/persons/:id", (req, res) => {
+  const id = parseInt(req.params.id)
+  const person = persons.find(person => person.id === id)
+  if (person) res.send(person)
+  else res.send("Person not found.")
+})
+
 app.get("/info", (req, res) => {
   res.send(`
     Phonebook has info for ${persons.length} people.
