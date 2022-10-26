@@ -42,8 +42,12 @@ app.get("/info", (req, res) => {
 })
 
 app.post("/api/persons", (req, res) => {
-  console.log(req.body)
   const id = parseInt((Math.random() * (99999 - 1) + 1).toFixed(0))
+
+  if (!req.body.name) res.status(400).json({"error": "Missing name."})
+  else if (!req.body.number) res.status(400).json({"error": "Missing number."})
+  else if (persons.map(person => person.name).includes(req.body.name)) res.status(400).json({"error": "Name must be unique."})
+
   const newPerson = {
     ...req.body, 
     id
