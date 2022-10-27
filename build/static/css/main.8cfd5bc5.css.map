@@ -1,0 +1,1 @@
+{"version":3,"file":"static/css/main.8cfd5bc5.css","mappings":"AAAA,cACI,YAAa,CACb,gBACJ","sources":["index.css"],"sourcesContent":[".notification {\n    border: solid;\n    padding-left: 8px;\n}"],"names":[],"sourceRoot":""}
