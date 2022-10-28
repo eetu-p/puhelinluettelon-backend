@@ -20,29 +20,6 @@ app.use(morgan((tokens, req, res) => {
   ].join(' ')
 }))
 
-let persons = [
-  { 
-    "name": "Arto Hellas", 
-    "number": "040-123456",
-    "id": 1
-  },
-  { 
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523",
-    "id": 2
-  },
-  { 
-    "name": "Dan Abramov", 
-    "number": "12-43-234345",
-    "id": 3
-  },
-  { 
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122",
-    "id": 4
-  }
-]
-
 app.get('/api/persons', (req, res) => {
   PhoneNumber.find({}).then(phoneNumbers => res.json(phoneNumbers))
 })
@@ -57,9 +34,10 @@ app.get("/api/persons/:id", (req, res, next) => {
     .catch(error => next(error))
 })
 
-app.get("/info", (req, res) => {
+app.get("/info", async (req, res) => {
+  const amount = await PhoneNumber.countDocuments({})
   res.send(`
-    Phonebook has info for ${persons.length} people.
+    Phonebook has info for ${amount} people.
     ${Date()}
   `)
 })
