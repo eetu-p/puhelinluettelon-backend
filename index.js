@@ -1,7 +1,10 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require("cors")
+require('dotenv/config')
 const app = express()
+const PhoneNumber = require("./models/phone-number")
+const { response } = require('express')
 
 app.use(express.static('build'))
 app.use(cors())
@@ -41,13 +44,13 @@ let persons = [
   }
 ]
 
-app.get('/api/persons', (req, res) => res.send(persons))
+app.get('/api/persons', (req, res) => {
+  PhoneNumber.find({}).then(phoneNumbers => res.json(phoneNumbers))
+})
 
 app.get("/api/persons/:id", (req, res) => {
-  const id = parseInt(req.params.id)
-  const person = persons.find(person => person.id === id)
-  if (person) res.send(person)
-  else res.send("Person not found.")
+  const id = req.params.id
+  PhoneNumber.findById(id).then(phoneNumber => res.json(phoneNumber))
 })
 
 app.get("/info", (req, res) => {
@@ -58,31 +61,18 @@ app.get("/info", (req, res) => {
 })
 
 app.post("/api/persons", (req, res) => {
-  const id = parseInt((Math.random() * (99999 - 1) + 1).toFixed(0))
-  let newPerson
-
   if (!req.body.name) res.status(400).json({"error": "Missing name."})
   else if (!req.body.number) res.status(400).json({"error": "Missing number."})
-  else if (persons.map(person => person.name).includes(req.body.name)) res.status(400).json({"error": "Name must be unique."})
-  else {
-    newPerson = {
-      ...req.body, 
-      id
-    }
-    persons.push(newPerson)
-    res.json(newPerson)
-  }
+  
+  const newPerson = new PhoneNumber({...req.body})
+  newPerson.save().then(savedPerson => res.json(savedPerson))
 })
 
 app.delete("/api/persons/:id", (req, res) => {
-  const id = parseInt(req.params.id)
-  const person = persons.find(person => person.id === id)
-  if (person) {
-    persons = persons.filter(person => person.id !== id)
-    res.status(204).end()
-  } else {
-    res.status(404).send("Person not found.")
-  }
+  const id = req.params.id
+  PhoneNumber.findByIdAndRemove(id)
+    .then(() => res.status(204).end())
+    .catch(error => next(error))
 })
 
 const PORT = process.env.PORT || 3001
