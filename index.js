@@ -81,6 +81,13 @@ app.post("/api/persons", (req, res, next) => {
   }
 })
 
+app.put("/api/persons/:id", (req, res, next) => {
+  const id = req.params.id
+  PhoneNumber.findByIdAndUpdate(id, {...req.body}, { new: true })
+    .then(phoneNumber => res.json(phoneNumber))
+    .catch(error => next(error))
+})
+
 app.delete("/api/persons/:id", (req, res, next) => {
   const id = req.params.id
   PhoneNumber.findByIdAndRemove(id)
