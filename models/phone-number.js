@@ -4,8 +4,15 @@ const url = process.env.MONGODB_URI
 mongoose.connect(url)
 
 const phoneNumberSchema = new mongoose.Schema({
-  name: String,
-  number: String
+  name: {
+    type: String,
+    minlength: 3,
+    required: true
+  },
+  number: {
+    type: String,
+    required: true
+  }
 })
 
 phoneNumberSchema.set('toJSON', {

@@ -43,20 +43,10 @@ app.get("/info", async (req, res) => {
 })
 
 app.post("/api/persons", (req, res, next) => {
-  if (!req.body.name) {
-    next({
-      name: "CustomError",
-      message: "Missing name."
-    })
-  } else if (!req.body.number) {
-    next({
-      name: "CustomError",
-      message: "Missing number."
-    })
-  } else {
-    const newPerson = new PhoneNumber({...req.body})
-    newPerson.save().then(savedPerson => res.json(savedPerson))
-  }
+  const newPerson = new PhoneNumber({...req.body})
+  newPerson.save()
+    .then(savedPerson => res.json(savedPerson))
+    .catch(error => next(error))
 })
 
 app.put("/api/persons/:id", (req, res, next) => {
@@ -77,7 +67,7 @@ const errorHandler = (error, req, res, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') return res.status(400).send({ error: 'malformatted id' })
-  else if (error.name === "CustomError") return res.status(400).send({ error: error.message })
+  else if (["CustomError", "ValidationError"].includes(error.name)) return res.status(400).json({ error: error.message })
 
   next(error)
 }
