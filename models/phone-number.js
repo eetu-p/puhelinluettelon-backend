@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 const url = process.env.MONGODB_URI
 mongoose.connect(url)
@@ -20,7 +20,7 @@ const phoneNumberSchema = new mongoose.Schema({
   }
 })
 
-phoneNumberSchema.set('toJSON', {
+phoneNumberSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
     delete returnedObject._id
@@ -28,6 +28,6 @@ phoneNumberSchema.set('toJSON', {
   }
 })
 
-const PhoneNumber = mongoose.model('Phone number', phoneNumberSchema)
+const PhoneNumber = mongoose.model("Phone number", phoneNumberSchema)
 
 module.exports = PhoneNumber
